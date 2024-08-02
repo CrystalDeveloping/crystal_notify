@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        .notify-box {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            width: 300px;
+        }
+
+        .notification {
+            display: flex;
+            align-items: center;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+            color: white;
+            overflow: hidden;
+            background: #333;
+            position: relative;
+            font-family: Arial, sans-serif;
+            transition: transform 0.4s ease, opacity 0.4s ease, box-shadow 0.3s ease;
+        }
+
+        .notification img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            margin-right: 20px;
+            object-fit: cover;
+        }
+
+        .notification.success { 
+            background: linear-gradient(135deg, #4caf50, #388e3c);
+        }
+
+        .notification.error { 
+            background: linear-gradient(135deg, #f44336, #d32f2f);
+        }
+
+        .notification.info { 
+            background: linear-gradient(135deg, #2196f3, #1976d2);
+        }
+
+        .notification .text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .notification .title {
+            font-weight: 700;
+            font-size: 18px;
+            margin-bottom: 8px;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .notification .message {
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        .notification .close {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 24px;
+            height: 24px;
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+        .notification .close:hover {
+            background: rgba(0, 0, 0, 0.4);
+        }
+
+        .notification .close::before {
+            content: '✖';
+            font-size: 18px;
+            color: white;
+        }
+
+        .notification.enter {
+            transform: translateY(-30px);
+            opacity: 0;
+        }
+
+        .notification.exit {
+            transform: translateY(30px);
+            opacity: 0;
+        }
+
+        .notification:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.4);
+        }
+
+
+    </style>
+</head>
+<body>
+
+    <audio id="audio" src="./audio1.mp3"></audio>
+
+    <div class="notify-box"></div>
+
+    <script>
+
+        function play() {
+        var audio = new Audio('audio1.mp3');
+        audio.play();
+        }
+
+        $(function() {
+            window.addEventListener('message', function(event) {
+                if (event.data.name === "showNotifica") {            
+                    play()     
+                    var titolo = event.data.titolo || "Notifica"; 
+                    var message = event.data.message;
+                    var type = event.data.type || "info";
+
+                    var notification = $('<div class="notification ' + type + '"></div>');
+                    
+                    var logo = $('<img src="https://media.discordapp.net/attachments/1248354107174031472/1267823482478002186/crystalvecchio.png?ex=66aa3021&is=66a8dea1&hm=25051857198d800ff4c21f24e6fde2cc357ad0179569fe3df10999ff379fe248&=&format=webp&quality=lossless&width=625&height=625" alt="Logo">');
+                    
+                    var text = $('<div class="text"></div>');
+                    var title = $('<div class="title"></div>').text(titolo);
+                    var msg = $('<div></div>').text(message);
+
+                    text.append(title).append(msg);
+
+                    notification.append(logo).append(text);
+                    $('.notify-box').append(notification);
+
+                    setTimeout(function() {
+                        notification.fadeOut(300, function() {
+                            $(this).remove();
+                        });
+                    }, 5000);
+                }
+            });
+        });
+    </script>
+</body>
+</html>
