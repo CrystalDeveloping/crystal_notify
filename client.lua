@@ -1,4 +1,4 @@
-function crystalsendnotify(titolo, type, message)
+function crystalsendnotify(message, titolo, type)
     SendNUIMessage({
         name = "showNotifica",
         titolo = titolo,
@@ -13,7 +13,7 @@ RegisterNUICallback('focus', function(data, cb)
 end)
 
 RegisterNetEvent('crystal:showNotify')
-AddEventHandler('crystal:showNotify', function (titolo, type, message)
+AddEventHandler('crystal:showNotify', function (message, titolo, type)
     SendNUIMessage({
         name = "showNotifica",
         titolo = titolo,
